@@ -1,0 +1,325 @@
+import { useState } from 'react';
+import { Check } from 'lucide-react';
+
+export default function AniversarioApp() {
+  const [currentTab, setCurrentTab] = useState('home');
+  const [nome, setNome] = useState('');
+  const [confirmados, setConfirmados] = useState([]);
+  const [confirmacao, setConfirmacao] = useState(false);
+  const [erro, setErro] = useState('');
+
+  const handleConfirmar = () => {
+    setErro('');
+    const nomeLimpo = nome.trim();
+    
+    if (!nomeLimpo) {
+      setErro('Por favor, digite seu nome');
+      return;
+    }
+
+    if (nomeLimpo.length < 2) {
+      setErro('Nome deve ter pelo menos 2 caracteres');
+      return;
+    }
+
+    if (confirmados.some(p => p.toLowerCase() === nomeLimpo.toLowerCase())) {
+      setErro('Este nome já foi confirmado');
+      return;
+    }
+
+    setConfirmados([...confirmados, nomeLimpo]);
+    setNome('');
+    setConfirmacao(true);
+    setTimeout(() => setConfirmacao(false), 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-50 flex flex-col font-sans antialiased">
+      {/* Meta Tags - Rendered in head via comment for documentation */}
+      {/* 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Confirme sua presença na festa de aniversário de Rafael - 36 anos com samba" />
+        <meta name="theme-color" content="#1e293b" />
+      */}
+
+      {/* Header */}
+      <header className="px-4 pt-6 pb-4 text-center flex-shrink-0 border-b border-amber-600/20">
+        <div className="inline-block mb-3">
+          <div className="w-1 h-6 bg-gradient-to-b from-amber-600 to-amber-700 mx-auto"></div>
+        </div>
+        <h1 className="text-5xl md:text-6xl font-light tracking-tight text-slate-50 mb-1">
+          RAFAEL
+        </h1>
+        <p className="text-amber-600/90 text-sm md:text-base font-medium tracking-widest">
+          36 ANOS
+        </p>
+      </header>
+
+      {/* Navigation */}
+      <nav className="border-b border-amber-600/20 bg-slate-950/60 backdrop-blur-md sticky top-0 z-40 flex-shrink-0">
+        <div className="flex divide-x divide-amber-600/20">
+          <button
+            onClick={() => setCurrentTab('home')}
+            className={`flex-1 py-3 px-2 text-center transition-colors duration-200 font-medium text-sm tracking-tight relative group ${
+              currentTab === 'home'
+                ? 'text-amber-500'
+                : 'text-slate-400 hover:text-amber-500/80'
+            }`}
+            aria-current={currentTab === 'home' ? 'page' : undefined}
+          >
+            Confirmar Presença
+            {currentTab === 'home' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+            )}
+          </button>
+          <button
+            onClick={() => setCurrentTab('lista')}
+            className={`flex-1 py-3 px-2 text-center transition-colors duration-200 font-medium text-sm tracking-tight relative group ${
+              currentTab === 'lista'
+                ? 'text-amber-500'
+                : 'text-slate-400 hover:text-amber-500/80'
+            }`}
+            aria-current={currentTab === 'lista' ? 'page' : undefined}
+          >
+            Lista ({confirmados.length})
+            {currentTab === 'lista' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+            )}
+          </button>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto px-4 py-6 md:py-8" role="main">
+        <div className="max-w-lg mx-auto">
+          {currentTab === 'home' && (
+            <div className="space-y-6 md:space-y-8 animate-fadeIn">
+              {/* Event Title */}
+              <section className="text-center space-y-3">
+                <p className="text-xs font-semibold tracking-widest text-amber-600/70 uppercase">
+                  Celebração
+                </p>
+                <h2 className="text-3xl md:text-4xl font-light tracking-tight leading-tight">
+                  Meu Aniversário com Samba
+                </h2>
+              </section>
+
+              {/* Event Card */}
+              <section 
+                className="border border-amber-600/30 bg-slate-900/40 backdrop-blur-sm rounded-lg p-6 md:p-7 space-y-5 shadow-lg hover:border-amber-600/50 transition-colors duration-300"
+                aria-label="Informações do evento"
+              >
+                {/* Data e Hora */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
+                    Data e Hora
+                  </p>
+                  <p className="text-lg md:text-xl font-light tracking-tight text-slate-50">
+                    01 de Novembro de 2025
+                  </p>
+                  <p className="text-base md:text-lg text-amber-600 font-medium">
+                    13:00
+                  </p>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-amber-600/0 via-amber-600/20 to-amber-600/0"></div>
+
+                {/* Local */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
+                    Local
+                  </p>
+                  <div className="space-y-1">
+                    <p className="text-base font-medium text-slate-50">
+                      Madame Surtô
+                    </p>
+                    <div className="text-sm text-slate-300 leading-relaxed space-y-0.5">
+                      <p>Estrada dos Três Rios, 722</p>
+                      <p>Freguesia • Jacarepaguá</p>
+                      <p>Rio de Janeiro • RJ</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Confirmation Section */}
+              <section aria-label="Formulário de confirmação">
+                <div className="space-y-2 mb-4">
+                  <p className="text-xs font-semibold tracking-widest text-amber-600/70 uppercase">
+                    Confirme sua Presença
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Seu nome completo"
+                      value={nome}
+                      onChange={(e) => {
+                        setNome(e.target.value);
+                        setErro('');
+                      }}
+                      onKeyPress={(e) => e.key === 'Enter' && handleConfirmar()}
+                      maxLength={50}
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-amber-600/30 rounded-lg text-slate-50 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 text-base font-normal"
+                      aria-label="Nome completo"
+                    />
+                  </div>
+
+                  {erro && (
+                    <div className="text-sm text-amber-500/90 font-medium animate-slideDown">
+                      ⚠ {erro}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleConfirmar}
+                    disabled={!nome.trim()}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 disabled:from-slate-700 disabled:to-slate-800 disabled:text-slate-500 text-slate-950 font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-amber-600/20 disabled:shadow-none text-base tracking-tight uppercase"
+                    aria-label="Confirmar presença"
+                  >
+                    Confirmar Presença
+                  </button>
+                </div>
+
+                {confirmacao && (
+                  <div className="mt-4 bg-emerald-950/50 border border-emerald-500/40 rounded-lg p-4 text-center animate-slideDown">
+                    <p className="text-emerald-400 font-medium text-sm">
+                      ✓ Presença confirmada com sucesso
+                    </p>
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+
+          {currentTab === 'lista' && (
+            <div className="space-y-6 md:space-y-8 animate-fadeIn">
+              {/* Header */}
+              <section className="text-center space-y-2">
+                <p className="text-xs font-semibold tracking-widest text-amber-600/70 uppercase">
+                  Confirmados
+                </p>
+                <p className="text-5xl md:text-6xl font-light text-amber-600">
+                  {confirmados.length}
+                </p>
+                <p className="text-sm text-slate-400 font-medium">
+                  {confirmados.length === 1 ? 'pessoa confirmada' : 'pessoas confirmadas'}
+                </p>
+              </section>
+
+              {/* Lista */}
+              {confirmados.length > 0 ? (
+                <section 
+                  className="border border-amber-600/30 bg-slate-900/40 backdrop-blur-sm rounded-lg overflow-hidden shadow-lg"
+                  aria-label="Lista de confirmados"
+                >
+                  {confirmados.map((pessoa, index) => (
+                    <div
+                      key={index}
+                      className={`px-4 py-3 md:px-5 md:py-4 flex items-center gap-3 transition-colors duration-200 ${
+                        index !== confirmados.length - 1 ? 'border-b border-amber-600/10' : ''
+                      } ${index % 2 === 0 ? 'bg-slate-800/20' : 'bg-slate-900/20'} hover:bg-slate-800/30`}
+                    >
+                      <div className="flex-shrink-0">
+                        <Check size={18} className="text-amber-500" strokeWidth={2.5} />
+                      </div>
+                      <span className="text-slate-100 font-normal text-base">
+                        {pessoa}
+                      </span>
+                    </div>
+                  ))}
+                </section>
+              ) : (
+                <div className="text-center py-12 md:py-16">
+                  <p className="text-slate-500 font-normal text-base">
+                    Aguardando confirmações...
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-amber-600/20 py-4 md:py-5 text-center flex-shrink-0 px-4">
+        <div className="max-w-lg mx-auto space-y-2">
+          <div className="w-1 h-4 bg-gradient-to-b from-amber-600 to-transparent mx-auto opacity-50"></div>
+          <p className="text-slate-500 text-xs font-medium tracking-tight">
+            Esperamos por você na celebração
+          </p>
+        </div>
+      </footer>
+
+      {/* Estilos Globais */}
+      <style>{`
+        @import url('https://rsms.me/inter/inter.css');
+        
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .animate-slideDown {
+          animation: slideDown 0.3s ease-out;
+        }
+
+        input::placeholder {
+          font-weight: 400;
+        }
+
+        button:focus-visible {
+          outline: 2px solid #b45309;
+          outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(15, 23, 42, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(217, 119, 6, 0.4);
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(217, 119, 6, 0.6);
+        }
+      `}</style>
+    </div>
+  );
+}
